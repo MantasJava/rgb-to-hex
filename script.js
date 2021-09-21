@@ -18,9 +18,17 @@ function displayError() {
   let hexField = document.querySelector("#converted-value");
   hexField.innerHTML = "";
   let field = document.createElement("h3");
-  field.style.color = "#FFF";
+  field.style.color = "#E06C75";
   field.innerHTML = "Error: RGB value must be between 0 to 255.";
   hexField.appendChild(field);
+}
+
+function checkRange(num) {
+  if (num >= 0 && num <= 255) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function readRgbValue() {
@@ -30,27 +38,25 @@ function readRgbValue() {
   if (r,g,b === "") {
     displayError();
   }
-  let intR = Number(r);
-  let intG = Number(g);
-  let intB = Number(b);
-
-  if (intR >= 0) {
-     if (intR <= 255) {
-       if (intG >= 0) {
-         if (intG <= 255) {
-           if (intB >= 0) {
-             if (intB <= 255) {
-               return rgbToHex(r, g, b);
-             }
-           }
-         }
+  if (checkRange(Number(r))) {
+     if (checkRange(Number(g))) {
+       if (checkRange(Number(b))) {
+           return rgbToHex(r, g, b);
        }
     }
   }
   displayError();
 }
 
-let rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
-  const hex = x.toString(16)
-  return hex.length === 1 ? '0' + hex : hex
-}).join('');
+function rgbToHex(red, green, blue) {
+    var out = '#';
+    for (var i = 0; i < 3; ++i) {
+        var n = typeof arguments[i] == 'number' ? arguments[i] : parseInt(arguments[i]);
+
+        if (isNaN(n) || n < 0 || n > 255) {
+            return false;
+        }
+        out += (n < 16 ? '0' : '') + n.toString(16);
+    }
+    return out;
+}
